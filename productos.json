@@ -1,0 +1,23 @@
+[
+	{
+		"idProducto":"1",
+		"nombre":"Papas",
+		"precio":15.5,
+		"imagen":null,
+		"activo":true
+	},
+	{
+		"idProducto":"2",
+		"nombre":"Refresco",
+		"precio":18.5,
+		"imagen":null,
+		"activo":true
+	},
+	{
+		"idProducto":"3",
+		"nombre":"Chicle",
+		"precio":6.0,
+		"imagen":null,
+		"activo":true
+	}
+]
