@@ -212,6 +212,7 @@ public class ProductosFrame extends javax.swing.JFrame {
         cargarTabla(); 
     }
 
+    
 }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
