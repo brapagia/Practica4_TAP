@@ -14,14 +14,15 @@ public class Producto implements Serializable {
     private boolean activo;
 
     public Producto() {
+        this.activo = true;
     }
 
-    public Producto(String idProducto, String nombre, Double precio, String imagen, boolean activo) {
+    public Producto(String idProducto, String nombre, Double precio, String imagen) {
         this.idProducto = idProducto;
         this.nombre = nombre;
         this.precio = precio;
         this.imagen = imagen;
-        this.activo = activo;
+        this.activo = true;
     }
 
     public boolean isActivo() {

@@ -1,5 +1,6 @@
 package com.mycompany.tap_u1p4_a.views.admin;
 
+import com.mycompany.tap_u1p4_a.models.Producto;
 import com.mycompany.tap_u1p4_a.models.Usuario;
 import com.mycompany.tap_u1p4_a.models.Venta;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class MainFrame extends javax.swing.JFrame {
     private Usuario usuario;
     private ArrayList<Usuario> usuarios;
     private ArrayList<Venta> ventas;
+    private Producto productos;
 
     /**
      * Creates new form MainFrame
@@ -25,12 +27,13 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
     }
     
-    public MainFrame(Usuario usuario,ArrayList<Usuario> usuarios, ArrayList<Venta> ventas) {
+    public MainFrame(Usuario usuario,ArrayList<Usuario> usuarios, ArrayList<Venta> ventas, Producto productos) {
         initComponents();
         
         this.ventas = ventas;
         this.usuario = usuario;
         this.usuarios = usuarios;
+        this.productos = productos;
         
         setExtendedState(
             getExtendedState() | JFrame.MAXIMIZED_BOTH
@@ -62,6 +65,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu1.setText("Tienda");
 
         jMenuItem1.setText("Productos");
+        jMenuItem1.addActionListener(this::jMenuItem1ActionPerformed);
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setText("Ventas");
@@ -97,7 +101,7 @@ public class MainFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 277, Short.MAX_VALUE)
+            .addGap(0, 350, Short.MAX_VALUE)
         );
 
         pack();
@@ -118,6 +122,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         new SalesFrame(ventas).setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new ProductosFrame(productos).setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments

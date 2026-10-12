@@ -1,10 +1,12 @@
 package com.mycompany.tap_u1p4_a.views.admin;
 
 import com.mycompany.tap_u1p4_a.models.Venta;
+import com.mycompany.tap_u1p4_a.services.JsonService;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -68,6 +70,11 @@ public class SalesFrame extends javax.swing.JFrame {
         buttonExportar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        txtFiltroProducto = new javax.swing.JTextField();
+        txtFiltroUsuario = new javax.swing.JTextField();
+        txtFiltroFecha = new javax.swing.JTextField();
+        btnFiltrar = new javax.swing.JButton();
+        btnLimpiarFiltros = new javax.swing.JButton();
 
         jFileChooser1.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
         jFileChooser1.setDialogTitle("Exportar ventas");
@@ -105,6 +112,16 @@ public class SalesFrame extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
+        txtFiltroProducto.setText("jTextField1");
+
+        txtFiltroUsuario.setText("jTextField1");
+
+        txtFiltroFecha.setText("jTextField1");
+
+        btnFiltrar.setText("Filtrar");
+
+        btnLimpiarFiltros.setText("Limpiar Filtro");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -116,19 +133,39 @@ public class SalesFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonExportar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(labelTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(labelTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtFiltroProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                            .addComponent(txtFiltroUsuario)
+                            .addComponent(txtFiltroFecha))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnFiltrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnLimpiarFiltros, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(161, Short.MAX_VALUE)
+                .addContainerGap(238, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonExportar)
+                    .addComponent(labelTotal))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFiltroProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFiltrar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelTotal)
-                    .addComponent(buttonExportar))
-                .addContainerGap())
+                    .addComponent(txtFiltroUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLimpiarFiltros))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtFiltroFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25))
         );
 
         pack();
@@ -162,6 +199,47 @@ public class SalesFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_buttonExportarActionPerformed
 
+    private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {
+    String filtroProd = txtFiltroProducto.getText().toLowerCase();
+    String filtroUsu = txtFiltroUsuario.getText().toLowerCase();
+    String filtroFecha = txtFiltroFecha.getText().toLowerCase();
+
+    DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+    modelo.setRowCount(0); // Limpiar la tabla
+
+    List<Venta> todasLasVentas = JsonService.readSales(); // Ajusta a tu JsonService
+
+    for (Venta v : todasLasVentas) {
+        // Ajusta los "getters" dependiendo de los atributos exactos de tu clase Venta
+        String nombreProd = v.getProducto().toLowerCase(); // O v.getObjProducto().getNombre()...
+        String nombreUsu = v.getUsuario().toLowerCase();   // O v.getObjUsuario().getNombre()...
+        String fechaVenta = v.getFecha().toLowerCase();
+
+        // Lógica: Si el filtro está vacío (contains("")) siempre es true, lo que permite combinar filtros
+        boolean coincideProducto = nombreProd.contains(filtroProd);
+        boolean coincideUsuario = nombreUsu.contains(filtroUsu);
+        boolean coincideFecha = fechaVenta.contains(filtroFecha);
+
+        if (coincideProducto && coincideUsuario && coincideFecha) {
+            // Si pasa los filtros, se añade a la tabla
+            modelo.addRow(new Object[]{
+                v.getIdVenta(), 
+                v.getProducto(), 
+                v.getUsuario(), 
+                v.getFecha(), 
+                v.getTotal()
+            });
+        }
+    }
+}
+    
+    private void btnLimpiarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {
+    txtFiltroProducto.setText("");
+    txtFiltroUsuario.setText("");
+    txtFiltroFecha.setText("");
+    mostrarVentas(); // Tu método original que llena la tabla sin filtros
+}
+    
     /**
      * @param args the command line arguments
      */
@@ -188,10 +266,15 @@ public class SalesFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnFiltrar;
+    private javax.swing.JButton btnLimpiarFiltros;
     private javax.swing.JButton buttonExportar;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel labelTotal;
+    private javax.swing.JTextField txtFiltroFecha;
+    private javax.swing.JTextField txtFiltroProducto;
+    private javax.swing.JTextField txtFiltroUsuario;
     // End of variables declaration//GEN-END:variables
 }
